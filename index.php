@@ -1,18 +1,13 @@
 <?php
-include('source.php');
-include('Annotation/Prepare.php');
-include('Annotation/String.php');
-include('Annotation/Int.php');
-include('Annotation/Length.php');
-include('Annotation/Range.php');
-include('Annotation/Label.php');
+
+require_once __DIR__.'/vendor/autoload.php';
 
 $cleaner = new Prepare;
 $stringClass = new String;
 $intClass = new Int;
 $lengthClass = new Length;
 $rangeClass = new Range;
-$lableClass = new Label;
+$labelClass = new Label;
 $reflection = new ReflectionClass(new Person);
 
 $source = file_get_contents('source.php');
@@ -22,7 +17,7 @@ $properties = $reflection->getProperties();
 
 foreach ($tokens as $token) {
     if ($token[0]==373) {
-        $field['label'] = $lableClass->getLabel($token[1]);
+        $field['label'] = $labelClass->getLabel($token[1]);
         $field['input'] = $cleaner->prepareToken($token[1]);
         $field['input'] = $stringClass->getStringType($field['input']);
         $field['input'] = $intClass->getIntType($field['input']);
