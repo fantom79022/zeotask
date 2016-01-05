@@ -1,56 +1,40 @@
 <?php
 include('source.php');
+include('Annotation/Prepare.php');
+include('Annotation/String.php');
+include('Annotation/Int.php');
+include('Annotation/Length.php');
+include('Annotation/Range.php');
+include('Annotation/Label.php');
 
-$class = new ReflectionClass(new Person);
+$cleaner = new Prepare;
+$stringClass = new String;
+$intClass = new Int;
+$lengthClass = new Length;
+$rangeClass = new Range;
+$lableClass = new Label;
+$reflection = new ReflectionClass(new Person);
+
 $source = file_get_contents('source.php');
 $tokens = token_get_all($source);
-$properties = $class->getProperties();
-$patterns[0] = '[\*]';
-$patterns[1] = '[/]';
-$patterns[2] = '/var/';
-$patterns[3] = '/ string/';
-$patterns[4] = '/ int/';
-$patterns[5] = '/(length)[(](\d++)\)/';
-$patterns[7] = '/(range)[(](\d+), (\d+)[)]/';
-$patterns[7] = '/(range)[(](\d+), (\d+)[)]/';
-$patterns[8] = '[\@]';
+$properties = $reflection->getProperties();
 
-$replacements[0] = '';
-$replacements[1] = '';
-$replacements[2] = 'type="';
-$replacements[3] = 'text"';
-$replacements[4] = 'number"';
-$replacements[5] = 'maxlength="$2"';
-$replacements[7] = 'min="$2" max="$3"';
-$replacements[8] = '';
 
-$patternForLable = '/(text)[(]\'(label)\' => \'(.+)\'\)/';
-$replacementForLabel = '';
-$i = 0;
 foreach ($tokens as $token) {
     if ($token[0]==373) {
-
-        $attribs[] = preg_replace($patterns, $replacements, $token[1]);
-
-        if (preg_match($patternForLable, $attribs[$i], $matches)) {
-            $attribs[$i] = preg_replace($patternForLable, $replacementForLabel, $attribs[$i]);
-               $label[$i] = '<lable for="' . $properties[$i]->name .'">' . $matches[3] . '</label>';
+        $field['label'] = $lableClass->getLabel($token[1]);
+        $field['input'] = $cleaner->prepareToken($token[1]);
+        $field['input'] = $stringClass->getStringType($field['input']);
+        $field['input'] = $intClass->getIntType($field['input']);
+        $field['input'] = $lengthClass->getLength($field['input']);
+        $field['input'] = $rangeClass->getRange($field['input']);
+        $field['name']  = each($properties)['value']->name;
+        if ($field['label']) {
+            echo $field['label'];
         } else {
-            $label[$i] = null;
+            echo $field['name'];
         }
-        $i++;
+        echo ': <input name ="' . $field['name'] .'"' . $field['input'] . ' />';
+        echo '<br>';
     }
 }
-$i = 0;
-foreach ($properties as $name) {
-    if($label[$i]) {
-        echo $label[$i];
-    } else {
-        echo $name->name;
-    }
-    echo ' <input name ="'.$name->name . '"' .$attribs[$i]. '/>';
-    echo '<br>';
-    $i++;
-}
-
-
