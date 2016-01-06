@@ -6,10 +6,8 @@
             "email": "fantik@zeoalliance.com"
         }
     ],
-    "require": {},
-
     "autoload": {
-        "psr-4": { "": "Annotation/" },
+        "psr-4": { "": ["Annotation/", "Cache"] },
         "files": [
             "source.php"
         ]
