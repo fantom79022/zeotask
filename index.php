@@ -17,19 +17,22 @@ $properties = $reflection->getProperties();
 
 foreach ($tokens as $token) {
     if ($token[0]==373) {
-        $field['label'] = $labelClass->getLabel($token[1]);
-        $field['input'] = $cleaner->prepareToken($token[1]);
-        $field['input'] = $stringClass->getStringType($field['input']);
-        $field['input'] = $intClass->getIntType($field['input']);
-        $field['input'] = $lengthClass->getLength($field['input']);
-        $field['input'] = $rangeClass->getRange($field['input']);
-        $field['name']  = each($properties)['value']->name;
-        if ($field['label']) {
-            echo $field['label'];
-        } else {
-            echo $field['name'];
+        if(!preg_match('/(param)/', $token[1]) & !preg_match('/(return)/', $token[1])) {
+
+            $field['label'] = $labelClass->getLabel($token[1]);
+            $field['input'] = $cleaner->prepareToken($token[1]);
+            $field['input'] = $stringClass->getStringType($field['input']);
+            $field['input'] = $intClass->getIntType($field['input']);
+            $field['input'] = $lengthClass->getLength($field['input']);
+            $field['input'] = $rangeClass->getRange($field['input']);
+            $field['name']  = each($properties)['value']->name;
+            if ($field['label']) {
+                echo $field['label'];
+            } else {
+                echo $field['name'];
+            }
+            echo ': <input name ="' . $field['name'] .'"' . $field['input'] . ' />';
+            echo '<br>';
         }
-        echo ': <input name ="' . $field['name'] .'"' . $field['input'] . ' />';
-        echo '<br>';
     }
 }
