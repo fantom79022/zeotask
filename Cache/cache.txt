@@ -1,0 +1,8 @@
+/**      * @var string      * @required      * @length(50)      * @text('label' => 'Full Name')      */
+Full Name: <input name ="name"       type="text"       required       maxlength="50"              />
+/**      * @var string      * @length(50)      * @text('label' => 'Street Address')      */
+Street Address: <input name ="address"       type="text"       maxlength="50"              />
+/**      * @var int      * @range(0, 100)      */
+age: <input name ="age"       type="number"       min="0" max="100"       />
+/**      * @var string      * @length(20)      * @text('label' => 'Your phone')      */
+Your phone: <input name ="phone"       type="text"       maxlength="20"              />

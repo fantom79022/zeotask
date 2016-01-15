@@ -2,15 +2,18 @@
 
 class Cache
 {
-    /**
-     * @var Redis
-     */
-    private $redis;
+    const PATH = 'Cache/cache.txt';
 
-    public function startRedis($host = 'localhost') {
-        $redis = new Redis();
-        $redis->connect('localhost');
-        $this->redis = $redis;
+    /**
+     * @var cache
+     */
+    private $cache;
+
+    /**
+     * @param string $path
+     */
+    public function startCaching($path = self::PATH) {
+        $this->cache = fopen($path, 'a+');
     }
 
     /**
@@ -18,7 +21,10 @@ class Cache
      * @param string $result
      */
     public function saveToCache($originalToken, $result) {
-        $this->redis->set($originalToken, $result);
+        $cachedToken = str_replace("\n", ' ', $originalToken) . PHP_EOL;
+        $cachedResult = str_replace("\n", ' ', $result) . PHP_EOL;
+        fwrite($this->cache, $cachedToken);
+        fwrite($this->cache, $cachedResult);
     }
 
     /**
@@ -26,10 +32,20 @@ class Cache
      * @return bool|string
      */
     public function getFromCache($token) {
-
-        return $this->redis->get($token);
+        $searchToken = str_replace("\n", ' ', $token) . PHP_EOL;
+        $cacheArray = file(self::PATH);
+        $i = 0;
+        $last_key = key( array_slice($cacheArray, -1, 1, TRUE));
+        while ($i < $last_key) {
+            if ($searchToken == $cacheArray[$i]) {
+                return $cacheArray[$i+1];
+            }
+            $i+=2;
+        }
+        return false;
     }
-    public function closeRedis() {
-        $this->redis->close();
+
+    public function endCaching() {
+        fclose($this->cache);
     }
 }

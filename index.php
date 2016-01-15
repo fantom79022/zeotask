@@ -14,7 +14,7 @@ $tokens = token_get_all($source);
 $properties = $reflection->getProperties();
 
 $cache = new Cache();
-$cache->startRedis();
+$cache->startCaching();
 
 foreach ($tokens as $token) {
 
@@ -40,4 +40,4 @@ foreach ($tokens as $token) {
         }
     }
 }
-$cache->closeRedis();
+$cache->endCaching();
