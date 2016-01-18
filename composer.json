@@ -6,13 +6,13 @@
             "email": "fantik@zeoalliance.com"
         }
     ],
-    "require": {},
-
     "autoload": {
-        "psr-4": { "": "Annotation/" },
+        "psr-4": { "": ["Annotation/", "Cache"] },
         "files": [
             "source.php"
         ]
+    },
+    "require": {
+        "symfony/http-foundation": "^3.0"
     }
 }
-
