@@ -11,6 +11,8 @@
         "files": [
             "source.php"
         ]
+    },
+    "require": {
+        "symfony/http-foundation": "^3.0"
     }
 }
-

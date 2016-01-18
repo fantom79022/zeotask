@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/vendor/autoload.php';
 
+$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 $cleaner = new Prepare;
 $stringClass = new String;
 $intClass = new Int;
@@ -15,9 +16,8 @@ $properties = $reflection->getProperties();
 
 $cache = new Cache();
 $cache->startCaching();
-if (isset($_GET['invalidation']) && $_GET['invalidation'] == true) {
+if ($request->query->get('invalidation')) {
     $cache->invalidation();
-    $cache->reloadPage();
 }
 foreach ($tokens as $token) {
 
@@ -45,5 +45,8 @@ foreach ($tokens as $token) {
 }
 $cache->endCaching();
 
-?>
-<a href="?invalidation=true">Erase the cache</a>
+if (!$request->query->get('invalidation')) {
+    echo '<a href="?invalidation=true">Erase the cache</a>';
+} else {
+    echo '<a href="/"> Enable Cache </a>';
+}

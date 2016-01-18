@@ -53,9 +53,7 @@ class Cache
         file_put_contents(self::PATH, '');
     }
     public function reloadPage() {
-        echo '<script language="JavaScript">
-            window.location.href = "http://dev.task/"
-          </script>';
-        die();
+        header('Location:/');
+        exit();
     }
 }
