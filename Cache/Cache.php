@@ -48,4 +48,14 @@ class Cache
     public function endCaching() {
         fclose($this->cache);
     }
+
+    public function invalidation() {
+        file_put_contents(self::PATH, '');
+    }
+    public function reloadPage() {
+        echo '<script language="JavaScript">
+            window.location.href = "http://dev.task/"
+          </script>';
+        die();
+    }
 }

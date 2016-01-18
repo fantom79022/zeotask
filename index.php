@@ -15,7 +15,10 @@ $properties = $reflection->getProperties();
 
 $cache = new Cache();
 $cache->startCaching();
-
+if (isset($_GET['invalidation']) && $_GET['invalidation'] == true) {
+    $cache->invalidation();
+    $cache->reloadPage();
+}
 foreach ($tokens as $token) {
 
     if ($token[0] == 373) {
@@ -41,3 +44,6 @@ foreach ($tokens as $token) {
     }
 }
 $cache->endCaching();
+
+?>
+<a href="?invalidation=true">Erase the cache</a>
