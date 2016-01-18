@@ -52,8 +52,4 @@ class Cache
     public function invalidation() {
         file_put_contents(self::PATH, '');
     }
-    public function reloadPage() {
-        header('Location:/');
-        exit();
-    }
 }
